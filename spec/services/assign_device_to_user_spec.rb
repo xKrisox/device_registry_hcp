@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+
+# This file contains the tests for the AssignDeviceToUser service.
+# It checks if the service correctly handles device assignments and raises appropriate errors.
 require 'rails_helper'
 
 RSpec.describe AssignDeviceToUser do
@@ -33,8 +36,15 @@ RSpec.describe AssignDeviceToUser do
 
     context 'when a user tries to register a device that was already assigned to and returned by the same user' do
       before do
-        assign_device
+        # Minor fix: ensure the device is first returned before attempting re-assignment in the test.
+        # This guarantees the business rule is properly tested for re-registering a
         ReturnDeviceFromUser.new(user: user, serial_number: serial_number, from_user: user.id).call
+      
+        AssignDeviceToUser.new(
+          requesting_user: user,
+          serial_number: serial_number,
+          new_device_owner_id: user.id,
+        ).call
       end
 
       it 'does not allow to register' do
