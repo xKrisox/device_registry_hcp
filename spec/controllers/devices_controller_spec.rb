@@ -42,7 +42,11 @@ RSpec.describe DevicesController, type: :controller do
     end
   end
 
-  describe 'POST #unassign' do
+  describe 'POST #unassign' do# Tests for the unassign action.
+    # This action should mark the device as returned for the current user.
+    # It expects the device serial number in params and requires authentication.
+    # The response should be successful if the user is authenticated and the device exists.
+    # If the user is not authenticated, it should return an unauthorized response.
     # TODO: implement the tests for the unassign action
     subject(:unassign) do
       post :unassign,
